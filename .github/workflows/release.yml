@@ -19,6 +19,10 @@ jobs:
       - run: pip install --upgrade -r requirements.txt
       - run: docker compose build
       - run: docker compose up -d
+      - name: Logs for DB
+        run: docker compose logs db
+        if: always()
+
       - run: sleep 5
       - run: pytest tests --junit-xml=tests-results.xml
         env:
