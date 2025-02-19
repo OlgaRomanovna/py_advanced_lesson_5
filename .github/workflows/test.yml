@@ -20,8 +20,18 @@ jobs:
       - run: docker compose build
       - run: docker compose up -d
 
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          for i in {1..30}; do
+            if docker compose exec -T db pg_isready -U ci; then
+              echo "Database is ready!"
+              exit 0
+            fi
+            echo "Waiting for database..."
+            sleep 2
+          done
+          echo "Database did not become ready in time!" && exit 1
 
-      - run: sleep 5
       - run: pytest tests --junit-xml=tests-results.xml
         env:
           APP_URL: http://127.0.0.1:8002
