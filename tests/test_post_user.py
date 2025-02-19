@@ -3,7 +3,6 @@ from http import HTTPStatus
 
 import requests
 from faker import Faker
-
 from app.models.User import User
 
 fake = Faker()
@@ -17,12 +16,13 @@ user_payload = {
 
 
 class TestCreationUser:
+
     def test_successful_creation(self, app_url):
         response_post = requests.post(f"{app_url}/api/users", json=user_payload)
         assert response_post.status_code == HTTPStatus.CREATED
         user = User.model_validate(response_post.json())
         response_get = requests.get(f"{app_url}/api/users/{user.id}")
-        assert response_post.status_code == HTTPStatus.OK
+        assert response_get.status_code == HTTPStatus.OK
         get_user = User.model_validate(response_get.json())
         assert user.id == get_user.id
 

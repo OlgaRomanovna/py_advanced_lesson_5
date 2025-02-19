@@ -9,7 +9,7 @@ class TestGetUserById:
 
     def test_user(self, app_url):
         response_users = requests.get(f"{app_url}/api/users")
-        user = User.model_validate(response_users.json())
+        user = User.model_validate(response_users.json()["items"][0])
         response = requests.get(f"{app_url}/api/users/{user.id}")
         assert response.status_code == HTTPStatus.OK
 

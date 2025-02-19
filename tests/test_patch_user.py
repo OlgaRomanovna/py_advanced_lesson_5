@@ -24,6 +24,7 @@ def create_user(app_url):
 
 
 class TestUpdatedUser:
+
     def test_successful_update(self, app_url, create_user):
         updated_first_name = {
             "first_name": "Hulio"
@@ -35,20 +36,18 @@ class TestUpdatedUser:
         user_get = User.model_validate(response_get.json())
         assert user_get.first_name == "Hulio"
 
-    def test_invalid_email(self, app_url):
+    def test_invalid_email(self, app_url, create_user):
         updated_email = {
             "email": "email"
         }
-        user_id = create_user(app_url)
-        response_patch = requests.patch(f"{app_url}/api/users/{user_id}", json=updated_email)
+        response_patch = requests.patch(f"{app_url}/api/users/{create_user}", json=updated_email)
         assert response_patch.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
-    def test_invalid_avatar(self, app_url):
+    def test_invalid_avatar(self, app_url, create_user):
         updated_avatar = {
             "avatar": "avatar"
         }
-        user_id = create_user(app_url)
-        response_patch = requests.patch(f"{app_url}/api/users/{user_id}", json=updated_avatar)
+        response_patch = requests.patch(f"{app_url}/api/users/{create_user}", json=updated_avatar)
         assert response_patch.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
     @pytest.mark.parametrize("user_id", [-1, 0, "fafaf"])

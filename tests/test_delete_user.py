@@ -35,10 +35,9 @@ class TestDeletionUser:
         response_delete = requests.delete(f"{app_url}/api/users/{user_id}")
         assert response_delete.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
-    def test_double_removal(self, app_url):
-        user_id = create_user(app_url)
-        response_delete = requests.delete(f"{app_url}/api/users/{user_id}")
+    def test_double_removal(self, app_url, create_user):
+        response_delete = requests.delete(f"{app_url}/api/users/{create_user}")
         assert response_delete.status_code == HTTPStatus.OK
-        response_delete_2 = requests.delete(f"{app_url}/api/users/{user_id}")
+        response_delete_2 = requests.delete(f"{app_url}/api/users/{create_user}")
         assert response_delete_2.status_code == HTTPStatus.NOT_FOUND
 
