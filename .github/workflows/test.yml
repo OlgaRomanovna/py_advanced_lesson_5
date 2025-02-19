@@ -19,6 +19,9 @@ jobs:
       - run: pip install --upgrade -r requirements.txt
       - run: docker compose build
       - run: docker compose up -d
+      - run: docker compose logs db
+        if: always()
+
 
       - name: Wait for PostgreSQL to be ready
         run: |
