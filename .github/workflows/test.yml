@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       POSTGRES_USER: ci
-      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_PASSWORD: ci
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
