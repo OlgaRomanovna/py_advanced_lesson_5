@@ -25,33 +25,33 @@ def create_user(app_url):
 
 class TestUpdatedUser:
 
-    def test_successful_update(self, app_url, create_user):
+    def test_successful_update(self, users_api, create_user):
         updated_first_name = {
             "first_name": "Hulio"
         }
-        response_patch = requests.patch(f"{app_url}/api/users/{create_user}", json=updated_first_name)
+        response_patch = users_api.patch(create_user, json=updated_first_name)
         assert response_patch.status_code == HTTPStatus.OK
         user = User.model_validate(response_patch.json())
-        response_get = requests.get(f"{app_url}/api/users/{user.id}")
+        response_get = users_api.get_by_id(user.id)
         user_get = User.model_validate(response_get.json())
         assert user_get.first_name == "Hulio"
 
-    def test_invalid_email(self, app_url, create_user):
+    def test_invalid_email(self, users_api, create_user):
         updated_email = {
             "email": "email"
         }
-        response_patch = requests.patch(f"{app_url}/api/users/{create_user}", json=updated_email)
+        response_patch = users_api.patch(create_user, json=updated_email)
         assert response_patch.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
-    def test_invalid_avatar(self, app_url, create_user):
+    def test_invalid_avatar(self, users_api, create_user):
         updated_avatar = {
             "avatar": "avatar"
         }
-        response_patch = requests.patch(f"{app_url}/api/users/{create_user}", json=updated_avatar)
+        response_patch = users_api.patch(create_user, json=updated_avatar)
         assert response_patch.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
     @pytest.mark.parametrize("user_id", [-1, 0, "fafaf"])
-    def test_invalid_user_id(self, app_url, user_id):
-        response_patch = requests.patch(f"{app_url}/api/users/{user_id}")
+    def test_invalid_user_id(self, users_api, user_id):
+        response_patch = users_api.patch(user_id)
         assert response_patch.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
 
